@@ -1,33 +1,37 @@
 package com.company.jmixbpmdemo.entity;
 
-import io.jmix.core.metamodel.datatype.EnumClass;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import org.springframework.lang.Nullable;
+@JmixEntity
+@Table(name = "PIZZA_ITEM")
+@Entity
+public class PizzaItem {
 
+    @InstanceName
+    @Column(name = "ID", nullable = false)
+    @Id
+    private String id;
+    @Column(name = "PRICE")
+    private Integer price;
 
-public enum PizzaItem implements EnumClass<String> {
+    public Integer getPrice() {
+        return price;
+    }
 
-    VEGETARIAN("V"),
-    PEPPRONY("p"),
-    WITH_BEEF("w");
-
-    private final String id;
-
-    PizzaItem(String id) {
-        this.id = id;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public String getId() {
         return id;
     }
 
-    @Nullable
-    public static PizzaItem fromId(String id) {
-        for (PizzaItem at : PizzaItem.values()) {
-            if (at.getId().equals(id)) {
-                return at;
-            }
-        }
-        return null;
+    public void setId(String id) {
+        this.id = id;
     }
 }
