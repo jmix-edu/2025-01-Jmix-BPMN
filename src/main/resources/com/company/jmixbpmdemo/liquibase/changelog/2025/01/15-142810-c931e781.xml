@@ -10,7 +10,7 @@
             <column name="ID" type="INT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORDER_LINE"/>
             </column>
-            <column name="PIZZA_ITEM_ID" type="VARCHAR(255)"/>
+            <column name="PIZZA_ITEM_ID" type="UUID"/>
             <column name="SPECIAL_REQUIREMENTS" type="VARCHAR(255)"/>
             <column name="PIZZA_EATER_ID" type="UUID">
                 <constraints nullable="false"/>
@@ -20,9 +20,10 @@
     </changeSet>
     <changeSet id="2" author="jmix-bpm-demo">
         <createTable tableName="PIZZA_ITEM">
-            <column name="ID" type="VARCHAR(255)">
+            <column name="ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_PIZZA_ITEM"/>
             </column>
+            <column name="NAME" type="VARCHAR(255)"/>
             <column name="PRICE" type="INT"/>
         </createTable>
     </changeSet>
@@ -38,11 +39,20 @@
             <column name="DELIVERY_NUMBER" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="OPENED" type="DATETIME"/>
-            <column name="CLOSED" type="DATETIME"/>
+            <column name="APPROVED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REJECTED" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="4" author="jmix-bpm-demo">
+        <addColumn tableName="USER_">
+            <column name="POSITION_" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="5" author="jmix-bpm-demo">
         <createIndex indexName="IDX_ORDER_LINE_PIZZA_EATER" tableName="ORDER_LINE">
             <column name="PIZZA_EATER_ID"/>
         </createIndex>
@@ -51,7 +61,7 @@
                                  constraintName="FK_ORDER_LINE_ON_PIZZA_EATER" referencedColumnNames="ID"
                                  referencedTableName="USER_"/>
     </changeSet>
-    <changeSet id="5" author="jmix-bpm-demo">
+    <changeSet id="6" author="jmix-bpm-demo">
         <createIndex indexName="IDX_ORDER_LINE_PIZZA_ITEM" tableName="ORDER_LINE">
             <column name="PIZZA_ITEM_ID"/>
         </createIndex>
@@ -60,7 +70,7 @@
                                  constraintName="FK_ORDER_LINE_ON_PIZZA_ITEM" referencedColumnNames="ID"
                                  referencedTableName="PIZZA_ITEM"/>
     </changeSet>
-    <changeSet id="6" author="jmix-bpm-demo">
+    <changeSet id="7" author="jmix-bpm-demo">
         <createIndex indexName="IDX_ORDER_LINE_PIZZA_ORDER" tableName="ORDER_LINE">
             <column name="PIZZA_ORDER_ID"/>
         </createIndex>
@@ -69,7 +79,7 @@
                                  constraintName="FK_ORDER_LINE_ON_PIZZA_ORDER" referencedColumnNames="ID"
                                  referencedTableName="PIZZA_ORDER"/>
     </changeSet>
-    <changeSet id="7" author="jmix-bpm-demo">
+    <changeSet id="8" author="jmix-bpm-demo">
         <createIndex indexName="IDX_PIZZA_ORDER_APPROVER" tableName="PIZZA_ORDER">
             <column name="APPROVER_ID"/>
         </createIndex>
@@ -78,7 +88,7 @@
                                  constraintName="FK_PIZZA_ORDER_ON_APPROVER" referencedColumnNames="ID"
                                  referencedTableName="USER_"/>
     </changeSet>
-    <changeSet id="8" author="jmix-bpm-demo">
+    <changeSet id="9" author="jmix-bpm-demo">
         <createIndex indexName="IDX_PIZZA_ORDER_INITIATIOR" tableName="PIZZA_ORDER">
             <column name="INITIATIOR_ID"/>
         </createIndex>

@@ -7,7 +7,6 @@
                   class="com.company.jmixbpmdemo.entity.PizzaOrder">
             <fetchPlan extends="_base">
                 <property name="orderLines" fetchPlan="_base"/>
-                <property name="initiatior" fetchPlan="_base"/>
                 <property name="approver" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="pizzaOrderDl"/>
@@ -26,12 +25,6 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <entityPicker id="initiatiorField" property="initiatior">
-                <actions>
-                    <action id="entityLookup" type="entity_lookup"/>
-                    <action id="entityClear" type="entity_clear"/>
-                </actions>
-            </entityPicker>
             <entityPicker id="approverField" property="approver">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>
@@ -39,8 +32,8 @@
                 </actions>
             </entityPicker>
             <textField id="deliveryNumberField" property="deliveryNumber"/>
-            <dateTimePicker id="openedField" property="opened"/>
-            <dateTimePicker id="closedField" property="closed"/>
+            <checkbox id="rejectedField" property="rejected"/>
+            <checkbox id="approvedField" property="approved"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>

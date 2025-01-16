@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
-  <process id="pizza-process" name="" isExecutable="true" flowable:candidateStarterUsers="peter" jmix:candidateStarterUsersValue="peter">
+  <process id="pizza-process" name="Pizza process with view forms" isExecutable="true" flowable:candidateStarterUsers="peter" jmix:candidateStarterUsersValue="peter">
     <startEvent id="startEvent1" name="Feed developer">
       <extensionElements>
         <jmix:processVariables>
@@ -18,27 +18,14 @@
             <jmix:processVariableProperty name="entityName" value="PizzaItem" />
           </jmix:processVariable>
         </jmix:processVariables>
-        <jmix:formData type="input-dialog" openMode="DIALOG">
-          <jmix:formFields>
-            <jmix:formField id="message" caption="Message" type="string" editable="true" required="false" />
-            <jmix:formField id="pizzaEater" caption="Pizza eater" type="entity" editable="true" required="true">
-              <jmix:formFieldProperty name="entityName" value="User" />
-              <jmix:formFieldProperty name="uiComponent" value="comboBox" />
-              <jmix:formFieldProperty name="lookupScreen" value="User.list" />
-              <jmix:formFieldProperty name="query" value="select u from User u where u.position = &#39;developer&#39;" />
-            </jmix:formField>
-          </jmix:formFields>
-        </jmix:formData>
+        <jmix:formData type="jmix-screen" openMode="DIALOG" screenId="PizzaProcessStartForm" />
       </extensionElements>
       <outgoing>Flow_0s4g9wb</outgoing>
     </startEvent>
     <userTask id="Activity_02y1kqp" name="Choose pizza" flowable:assignee="${pizzaEater.username}" jmix:assigneeSource="processVariable" jmix:assigneeValue="pizzaEater">
       <extensionElements>
         <jmix:formData type="jmix-screen" openMode="DIALOG" screenId="SelectPizzaForm">
-          <jmix:formOutcomes>
-            <jmix:formOutcome id="selected" />
-            <jmix:formOutcome id="not_hungry" />
-          </jmix:formOutcomes>
+          <jmix:formOutcomes />
         </jmix:formData>
       </extensionElements>
       <incoming>Flow_0s4g9wb</incoming>

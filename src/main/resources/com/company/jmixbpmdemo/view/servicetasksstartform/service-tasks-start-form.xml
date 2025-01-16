@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://serviceTasksStartForm.title">
+    <layout>
+        <formLayout>
+            <textField datatype="long" id="numberOfUsersField"
+                       label="msg://serviceTasksStartForm.variable.numberOfUsers"/>
+            <textField datatype="string" id="messageField" label="msg://serviceTasksStartForm.variable.message"/>
+            <textField datatype="string" id="greetingField" label="msg://serviceTasksStartForm.variable.greeting"/>
+        </formLayout>
+        <hbox id="actionsPanel">
+            <button id="startProcessBtn" icon="CHECK" text="msg://serviceTasksStartForm.startProcess"
+                    themeNames="primary"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,57 +1,52 @@
 package com.company.jmixbpmdemo.entity;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
 import java.util.List;
 
 @JmixEntity
 @Table(name = "PIZZA_ORDER", indexes = {
-        @Index(name = "IDX_PIZZA_ORDER_INITIATIOR", columnList = "INITIATIOR_ID"),
         @Index(name = "IDX_PIZZA_ORDER_APPROVER", columnList = "APPROVER_ID")
 })
 @Entity
 public class PizzaOrder {
+    @InstanceName
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
     private Integer id;
     @OneToMany(mappedBy = "pizzaOrder")
     private List<OrderLine> orderLines;
-    @JoinColumn(name = "INITIATIOR_ID", nullable = false)
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User initiatior;
     @JoinColumn(name = "APPROVER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private User approver;
-    @NotNull
-    @Column(name = "DELIVERY_NUMBER", nullable = false)
+    @Column(name = "DELIVERY_NUMBER")
     private String deliveryNumber;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "OPENED")
-    private Date opened;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CLOSED")
-    private Date closed;
+    @Column(name = "APPROVED", nullable = false)
+    @NotNull
+    private Boolean approved = false;
+    @Column(name = "REJECTED", nullable = false)
+    @NotNull
+    private Boolean rejected = false;
 
-    public Date getClosed() {
-        return closed;
+    public Boolean getRejected() {
+        return rejected;
     }
 
-    public void setClosed(Date closed) {
-        this.closed = closed;
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;
     }
 
-    public Date getOpened() {
-        return opened;
+    public Boolean getApproved() {
+        return approved;
     }
 
-    public void setOpened(Date opened) {
-        this.opened = opened;
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
     }
 
     public String getDeliveryNumber() {
@@ -68,14 +63,6 @@ public class PizzaOrder {
 
     public void setApprover(User approver) {
         this.approver = approver;
-    }
-
-    public User getInitiatior() {
-        return initiatior;
-    }
-
-    public void setInitiatior(User initiatior) {
-        this.initiatior = initiatior;
     }
 
     public List<OrderLine> getOrderLines() {

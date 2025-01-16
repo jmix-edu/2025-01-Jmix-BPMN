@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://pizzaProcessStartForm.title">
+    <data>
+        <collection id="usersDc" class="com.company.jmixbpmdemo.entity.User">
+            <loader id="usersDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from User e where e.position = 'developer']]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <formLayout>
+            <textField datatype="string" id="messageField" label="msg://pizzaProcessStartForm.variable.message"/>
+            <entityComboBox id="pizzaEaterField" label="msg://pizzaProcessStartForm.variable.pizzaEater" metaClass="User" itemsContainer="usersDc">
+            </entityComboBox>
+        </formLayout>
+        <hbox id="actionsPanel">
+            <button id="startProcessBtn" icon="CHECK" text="msg://pizzaProcessStartForm.startProcess"
+                    themeNames="primary"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
-  <process id="pizza-process" name="" isExecutable="true" flowable:candidateStarterUsers="peter" jmix:candidateStarterUsersValue="peter">
+  <process id="pizza-process" name="pizza-process with email task" isExecutable="true" flowable:candidateStarterGroups="" flowable:candidateStarterUsers="peter" jmix:candidateStarterGroupsValue="${approver.email}" jmix:candidateStarterUsersValue="peter">
     <startEvent id="startEvent1" name="Feed developer">
       <extensionElements>
         <jmix:processVariables>
@@ -34,14 +34,23 @@
     </startEvent>
     <userTask id="Activity_02y1kqp" name="Choose pizza" flowable:assignee="${pizzaEater.username}" jmix:assigneeSource="processVariable" jmix:assigneeValue="pizzaEater">
       <extensionElements>
-        <jmix:formData type="jmix-screen" openMode="DIALOG" screenId="SelectPizzaForm">
+        <jmix:formData type="input-dialog" openMode="DIALOG">
+          <jmix:formFields>
+            <jmix:formField id="message" caption="Message" type="string" editable="false" required="false" />
+            <jmix:formField id="specialRequirements" caption="Special requirements" type="string" editable="true" required="false" />
+            <jmix:formField id="pizzaItem" caption="Pizza item" type="entity" editable="true" required="true">
+              <jmix:formFieldProperty name="entityName" value="PizzaItem" />
+              <jmix:formFieldProperty name="uiComponent" value="comboBox" />
+              <jmix:formFieldProperty name="query" value="select p from PizzaItem p  " />
+            </jmix:formField>
+          </jmix:formFields>
           <jmix:formOutcomes>
-            <jmix:formOutcome id="selected" />
-            <jmix:formOutcome id="not_hungry" />
+            <jmix:formOutcome id="pizza_chosen" caption="Pizza chosen" icon="THUMBS_O_UP" />
+            <jmix:formOutcome id="not_hungry" caption="Not hungry" icon="BAN" />
           </jmix:formOutcomes>
         </jmix:formData>
       </extensionElements>
-      <incoming>Flow_0s4g9wb</incoming>
+      <incoming>Flow_1jvjgy4</incoming>
       <outgoing>Flow_04sng5s</outgoing>
     </userTask>
     <userTask id="Activity_0ysj3jq" name="Approve order" flowable:assignee="${randomRobinUserProvider.getUser()}" jmix:assigneeSource="userProvider" jmix:assigneeValue="randomRobinUserProvider">
@@ -101,7 +110,7 @@
     <endEvent id="Event_1h2e1z9" name="Enjoy pizza">
       <incoming>Flow_1lcscqa</incoming>
     </endEvent>
-    <sequenceFlow id="Flow_0s4g9wb" sourceRef="startEvent1" targetRef="Activity_02y1kqp" />
+    <sequenceFlow id="Flow_0s4g9wb" sourceRef="startEvent1" targetRef="Activity_0ujid86" />
     <sequenceFlow id="Flow_04sng5s" sourceRef="Activity_02y1kqp" targetRef="Gateway_0pfjcma">
       <extensionElements>
         <jmix:conditionDetails conditionSource="userTaskOutcome" />
@@ -170,7 +179,7 @@
     <serviceTask id="Activity_0a2nz7a" name="send email to accountant" flowable:type="jmix-send-email">
       <extensionElements>
         <flowable:field name="to">
-          <flowable:string>${approver.email}</flowable:string>
+          <flowable:string>jane@pizzaexample.com</flowable:string>
         </flowable:field>
         <flowable:field name="subject">
           <flowable:string>Task assigned</flowable:string>
@@ -184,15 +193,16 @@
       </extensionElements>
       <incoming>Flow_0jv4s4x</incoming>
     </serviceTask>
+    <sequenceFlow id="Flow_1jvjgy4" sourceRef="Activity_0ujid86" targetRef="Activity_02y1kqp" />
+    <scriptTask id="Activity_0ujid86" name="Add greetings" scriptFormat="groovy">
+      <incoming>Flow_0s4g9wb</incoming>
+      <outgoing>Flow_1jvjgy4</outgoing>
+      <script>def messageWithGreeting = "Hi, " + pizzaEater.firstName + "! " + message   
+execution.setVariable("message",  messageWithGreeting) </script>
+    </scriptTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_process">
     <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="pizza-process">
-      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
-        <omgdc:Bounds x="192" y="150" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds x="172" y="193" width="77" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0xjk5qb_di" bpmnElement="Activity_02y1kqp">
         <omgdc:Bounds x="310" y="128" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -230,6 +240,16 @@
         <omgdc:Bounds x="730" y="310" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="32" y="150" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="12" y="193" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1n33uxa_di" bpmnElement="Activity_0ujid86">
+        <omgdc:Bounds x="140" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_08mb5bc_di" bpmnElement="Event_01k7chs">
         <omgdc:Bounds x="642" y="190" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -237,8 +257,8 @@
         <omgdc:Bounds x="642" y="110" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0s4g9wb_di" bpmnElement="Flow_0s4g9wb">
-        <omgdi:waypoint x="228" y="168" />
-        <omgdi:waypoint x="310" y="168" />
+        <omgdi:waypoint x="68" y="168" />
+        <omgdi:waypoint x="140" y="168" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_04sng5s_di" bpmnElement="Flow_04sng5s">
         <omgdi:waypoint x="410" y="168" />
@@ -291,6 +311,10 @@
         <omgdi:waypoint x="660" y="226" />
         <omgdi:waypoint x="660" y="350" />
         <omgdi:waypoint x="730" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jvjgy4_di" bpmnElement="Flow_1jvjgy4">
+        <omgdi:waypoint x="240" y="168" />
+        <omgdi:waypoint x="310" y="168" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

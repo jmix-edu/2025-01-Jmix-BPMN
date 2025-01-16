@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="service-tasks-demo" name="Service tasks demo" isExecutable="true" flowable:candidateStarterUsers="peter" jmix:candidateStarterUsersValue="peter">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <jmix:processVariables>
+          <jmix:processVariable name="randomIndex" type="long" />
+          <jmix:processVariable name="timeToPrint" type="object" />
+          <jmix:processVariable name="greeting" type="string" />
+          <jmix:processVariable name="numberOfUsers" type="long" />
+          <jmix:processVariable name="message" type="string" />
+        </jmix:processVariables>
+        <jmix:formData type="jmix-screen" openMode="DIALOG" screenId="ServiceTasksStartForm" />
+      </extensionElements>
+      <outgoing>Flow_1t257ta</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_1t257ta" sourceRef="startEvent1" targetRef="Activity_1mgk6y6" />
+    <sequenceFlow id="Flow_19530ky" sourceRef="Activity_1mgk6y6" targetRef="Activity_0u43sy7" />
+    <sequenceFlow id="Flow_13iy9vu" sourceRef="Activity_0u43sy7" targetRef="Activity_0ip553w" />
+    <sequenceFlow id="Flow_0mg0j9c" sourceRef="Activity_0ip553w" targetRef="Activity_0t2ti1o" />
+    <endEvent id="Event_18lowax">
+      <incoming>Flow_1h9v5mv</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_00b25dd" sourceRef="Activity_0t2ti1o" targetRef="Activity_1ulh953" />
+    <serviceTask id="Activity_1mgk6y6" name="Java delegate task" flowable:class="com.company.jmixbpmdemo.delegate.RandomIndexJavaDelegate" jmix:taskType="javaDelegateClass">
+      <incoming>Flow_1t257ta</incoming>
+      <outgoing>Flow_19530ky</outgoing>
+    </serviceTask>
+    <serviceTask id="Activity_0u43sy7" name="Task with fields injection" flowable:class="com.company.jmixbpmdemo.delegate.UpperCaseJavaDelegate" jmix:taskType="javaDelegateClass">
+      <extensionElements>
+        <flowable:field name="decorationField">
+          <flowable:string>***</flowable:string>
+        </flowable:field>
+        <flowable:field name="messageField">
+          <flowable:expression>${message}</flowable:expression>
+        </flowable:field>
+      </extensionElements>
+      <incoming>Flow_19530ky</incoming>
+      <outgoing>Flow_13iy9vu</outgoing>
+    </serviceTask>
+    <serviceTask id="Activity_0ip553w" name="Java delegate expression" flowable:delegateExpression="${randomUserDelegate}" jmix:taskType="delegateExpression">
+      <incoming>Flow_13iy9vu</incoming>
+      <outgoing>Flow_0mg0j9c</outgoing>
+    </serviceTask>
+    <serviceTask id="Activity_0t2ti1o" name="Spring bean task" flowable:expression="${greetingMessageBean.printMessage(greeting,message,execution)}" flowable:resultVariable="timeToPrint" jmix:taskType="springBean" jmix:beanName="greetingMessageBean">
+      <extensionElements>
+        <jmix:springBean beanName="greetingMessageBean" methodName="printMessage">
+          <jmix:methodParam name="greeting" type="java.lang.String" isVariable="true">greeting</jmix:methodParam>
+          <jmix:methodParam name="message" type="java.lang.String" isVariable="true">message</jmix:methodParam>
+          <jmix:methodParam name="execution" type="org.flowable.engine.delegate.DelegateExecution" isVariable="true">execution</jmix:methodParam>
+        </jmix:springBean>
+      </extensionElements>
+      <incoming>Flow_0mg0j9c</incoming>
+      <outgoing>Flow_00b25dd</outgoing>
+    </serviceTask>
+    <sequenceFlow id="Flow_1h9v5mv" sourceRef="Activity_1ulh953" targetRef="Event_18lowax" />
+    <serviceTask id="Activity_1ulh953" name="Expression task" flowable:expression="${greetingMessageBean.printTime(timeToPrint)}" flowable:resultVariable="timeInMillis" jmix:taskType="expression">
+      <incoming>Flow_00b25dd</incoming>
+      <outgoing>Flow_1h9v5mv</outgoing>
+    </serviceTask>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="service-tasks-demo">
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="112" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18lowax_di" bpmnElement="Event_18lowax">
+        <omgdc:Bounds x="1082" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0j264ex_di" bpmnElement="Activity_1mgk6y6">
+        <omgdc:Bounds x="250" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_148jgoc_di" bpmnElement="Activity_0u43sy7">
+        <omgdc:Bounds x="430" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kzve2x_di" bpmnElement="Activity_0ip553w">
+        <omgdc:Bounds x="600" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0a3hvq7_di" bpmnElement="Activity_0t2ti1o">
+        <omgdc:Bounds x="770" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ndjye8_di" bpmnElement="Activity_1ulh953">
+        <omgdc:Bounds x="930" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1t257ta_di" bpmnElement="Flow_1t257ta">
+        <omgdi:waypoint x="148" y="168" />
+        <omgdi:waypoint x="250" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19530ky_di" bpmnElement="Flow_19530ky">
+        <omgdi:waypoint x="350" y="168" />
+        <omgdi:waypoint x="430" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13iy9vu_di" bpmnElement="Flow_13iy9vu">
+        <omgdi:waypoint x="530" y="168" />
+        <omgdi:waypoint x="600" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mg0j9c_di" bpmnElement="Flow_0mg0j9c">
+        <omgdi:waypoint x="700" y="168" />
+        <omgdi:waypoint x="770" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00b25dd_di" bpmnElement="Flow_00b25dd">
+        <omgdi:waypoint x="870" y="168" />
+        <omgdi:waypoint x="930" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h9v5mv_di" bpmnElement="Flow_1h9v5mv">
+        <omgdi:waypoint x="1030" y="168" />
+        <omgdi:waypoint x="1082" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

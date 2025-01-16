@@ -18,17 +18,7 @@
             <jmix:processVariableProperty name="entityName" value="PizzaItem" />
           </jmix:processVariable>
         </jmix:processVariables>
-        <jmix:formData type="input-dialog" openMode="DIALOG">
-          <jmix:formFields>
-            <jmix:formField id="message" caption="Message" type="string" editable="true" required="false" />
-            <jmix:formField id="pizzaEater" caption="Pizza eater" type="entity" editable="true" required="true">
-              <jmix:formFieldProperty name="entityName" value="User" />
-              <jmix:formFieldProperty name="uiComponent" value="comboBox" />
-              <jmix:formFieldProperty name="lookupScreen" value="User.list" />
-              <jmix:formFieldProperty name="query" value="select u from User u where u.position = &#39;developer&#39;" />
-            </jmix:formField>
-          </jmix:formFields>
-        </jmix:formData>
+        <jmix:formData type="jmix-screen" openMode="DIALOG" screenId="PizzaProcessStartForm" />
       </extensionElements>
       <outgoing>Flow_0s4g9wb</outgoing>
     </startEvent>
