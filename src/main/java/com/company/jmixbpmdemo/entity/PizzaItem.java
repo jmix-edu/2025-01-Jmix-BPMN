@@ -23,11 +23,20 @@ public class PizzaItem {
     @JmixGeneratedValue
     private UUID id;
 
+    @InstanceName
     @Column(name = "NAME")
     private String name;
 
     @Column(name = "PRICE")
-    private Integer price;
+    private Long price;
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
 
     public String getName() {
         return name;
@@ -43,22 +52,5 @@ public class PizzaItem {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-
-    @InstanceName
-    @DependsOnProperties({"name", "price"})
-    public String getInstanceName(MetadataTools metadataTools, DatatypeFormatter datatypeFormatter) {
-        return String.format("%s %s",
-                metadataTools.format(name),
-                datatypeFormatter.formatInteger(price));
     }
 }

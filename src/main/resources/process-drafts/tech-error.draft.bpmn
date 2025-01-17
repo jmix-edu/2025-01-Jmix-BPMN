@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="tech-error" name="Tech error" isExecutable="true">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <jmix:processVariables>
+          <jmix:processVariable name="responseCode" type="string" />
+        </jmix:processVariables>
+      </extensionElements>
+      <outgoing>Flow_0qg2opi</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_0qg2opi" sourceRef="startEvent1" targetRef="Activity_1qgekae" />
+    <sequenceFlow id="Flow_1o3uz3c" sourceRef="Activity_1qgekae" targetRef="Activity_0wi4qor" />
+    <sequenceFlow id="Flow_16bcz2q" sourceRef="Activity_0wi4qor" targetRef="Activity_0sw4bje" />
+    <endEvent id="Event_0ztroiv">
+      <incoming>Flow_1pcbpci</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_1pcbpci" sourceRef="Activity_0sw4bje" targetRef="Event_0ztroiv" />
+    <scriptTask id="Activity_1qgekae" name="Start" scriptFormat="groovy">
+      <incoming>Flow_0qg2opi</incoming>
+      <outgoing>Flow_1o3uz3c</outgoing>
+      <script>def current = new Date()
+println "Process started: $current"
+execution.setVariable("responseCode", "500")</script>
+    </scriptTask>
+    <scriptTask id="Activity_0sw4bje" name="Finish" flowable:async="true" scriptFormat="groovy">
+      <incoming>Flow_16bcz2q</incoming>
+      <outgoing>Flow_1pcbpci</outgoing>
+      <script>def current = new Date()
+println "Process finished: $current"</script>
+    </scriptTask>
+    <serviceTask id="Activity_0wi4qor" name="Tech error" flowable:async="true" flowable:class="com.company.jmixbpmdemo.delegate.TechError" jmix:taskType="javaDelegateClass">
+      <extensionElements>
+        <flowable:failedJobRetryTimeCycle>R3/PT15S</flowable:failedJobRetryTimeCycle>
+      </extensionElements>
+      <incoming>Flow_1o3uz3c</incoming>
+      <outgoing>Flow_16bcz2q</outgoing>
+    </serviceTask>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="tech-error">
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ztroiv_di" bpmnElement="Event_0ztroiv">
+        <omgdc:Bounds x="722" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sxo4jj_di" bpmnElement="Activity_1qgekae">
+        <omgdc:Bounds x="240" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17w415e_di" bpmnElement="Activity_0sw4bje">
+        <omgdc:Bounds x="560" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04v493d_di" bpmnElement="Activity_0wi4qor">
+        <omgdc:Bounds x="400" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0qg2opi_di" bpmnElement="Flow_0qg2opi">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="240" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o3uz3c_di" bpmnElement="Flow_1o3uz3c">
+        <omgdi:waypoint x="340" y="168" />
+        <omgdi:waypoint x="400" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16bcz2q_di" bpmnElement="Flow_16bcz2q">
+        <omgdi:waypoint x="500" y="168" />
+        <omgdi:waypoint x="560" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pcbpci_di" bpmnElement="Flow_1pcbpci">
+        <omgdi:waypoint x="660" y="168" />
+        <omgdi:waypoint x="722" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

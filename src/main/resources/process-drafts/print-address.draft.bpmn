@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="print-address" name="Print address" isExecutable="true">
+    <startEvent id="startEvent1">
+      <outgoing>Flow_0wsfof1</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_0wsfof1" sourceRef="startEvent1" targetRef="Activity_0ttkrc4" />
+    <scriptTask id="Activity_0ttkrc4" name="Print address" scriptFormat="groovy">
+      <incoming>Flow_0wsfof1</incoming>
+      <outgoing>Flow_1pmea9v</outgoing>
+      <script>println "Address: $city, $street, Building"</script>
+    </scriptTask>
+    <sequenceFlow id="Flow_1pmea9v" sourceRef="Activity_0ttkrc4" targetRef="Activity_0970dxj" />
+    <userTask id="Activity_0970dxj" name="Wait task" flowable:assignee="peter" jmix:assigneeSource="expression" jmix:assigneeValue="peter">
+      <incoming>Flow_1pmea9v</incoming>
+      <outgoing>Flow_0y9upue</outgoing>
+    </userTask>
+    <endEvent id="Event_0sbvd1o">
+      <incoming>Flow_0y9upue</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_0y9upue" sourceRef="Activity_0970dxj" targetRef="Event_0sbvd1o">
+      <extensionElements>
+        <jmix:conditionDetails conditionSource="userTaskOutcome" />
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="print-address">
+      <bpmndi:BPMNShape id="Activity_13p5kap_di" bpmnElement="Activity_0ttkrc4">
+        <omgdc:Bounds x="250" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="152" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mhs8sb_di" bpmnElement="Activity_0970dxj">
+        <omgdc:Bounds x="420" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0sbvd1o_di" bpmnElement="Event_0sbvd1o">
+        <omgdc:Bounds x="592" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0wsfof1_di" bpmnElement="Flow_0wsfof1">
+        <omgdi:waypoint x="188" y="168" />
+        <omgdi:waypoint x="219" y="168" />
+        <omgdi:waypoint x="219" y="170" />
+        <omgdi:waypoint x="250" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pmea9v_di" bpmnElement="Flow_1pmea9v">
+        <omgdi:waypoint x="350" y="168" />
+        <omgdi:waypoint x="420" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y9upue_di" bpmnElement="Flow_0y9upue">
+        <omgdi:waypoint x="520" y="168" />
+        <omgdi:waypoint x="592" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

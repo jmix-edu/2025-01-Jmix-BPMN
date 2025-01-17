@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="transaction-with-data-task-and-error" name="Transaction with data task and error" isExecutable="true">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <jmix:processVariables>
+          <jmix:processVariable name="piccaName" type="string" />
+          <jmix:processVariable name="pizzaPrice" type="long" />
+          <jmix:processVariable name="newPizzaItem" type="entity">
+            <jmix:processVariableProperty name="entityName" value="PizzaItem" />
+          </jmix:processVariable>
+          <jmix:processVariable name="message" type="string" />
+          <jmix:processVariable name="errorFlag" type="boolean" />
+        </jmix:processVariables>
+        <jmix:formData type="input-dialog" openMode="DIALOG">
+          <jmix:formFields>
+            <jmix:formField id="message" caption="Message" type="string" editable="true" required="true" />
+            <jmix:formField id="piccaName" caption="Picca name" type="string" editable="true" required="true" />
+            <jmix:formField id="pizzaPrice" caption="Pizza price" type="long" editable="true" required="true" />
+            <jmix:formField id="errorFlag" caption="Error flag" type="boolean" editable="true" required="true" />
+          </jmix:formFields>
+        </jmix:formData>
+      </extensionElements>
+      <outgoing>Flow_17zdkdb</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_17zdkdb" sourceRef="startEvent1" targetRef="Activity_085qicp" />
+    <sequenceFlow id="Flow_1203tiz" sourceRef="Activity_085qicp" targetRef="Activity_10wv48b" />
+    <sequenceFlow id="Flow_0uqh3ru" sourceRef="Activity_10wv48b" targetRef="Activity_1grlitq" />
+    <endEvent id="Event_0bxg4n7">
+      <incoming>Flow_1dh934q</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_1dh934q" sourceRef="Activity_1grlitq" targetRef="Event_0bxg4n7" />
+    <serviceTask id="Activity_085qicp" name="Create pizza item" flowable:type="jmix-create-entity">
+      <extensionElements>
+        <flowable:field name="entityName">
+          <flowable:string>PizzaItem</flowable:string>
+        </flowable:field>
+        <flowable:field name="resultVariable">
+          <flowable:string>newPizzaItem</flowable:string>
+        </flowable:field>
+        <flowable:field name="entityAttributes">
+          <flowable:string>[{"name":"name","valueType":"expression","value":"${piccaName}"},{"name":"price","valueType":"expression","value":"${pizzaPrice}"}]</flowable:string>
+        </flowable:field>
+      </extensionElements>
+      <incoming>Flow_17zdkdb</incoming>
+      <outgoing>Flow_1203tiz</outgoing>
+    </serviceTask>
+    <scriptTask id="Activity_10wv48b" name="Print message" scriptFormat="groovy">
+      <incoming>Flow_1203tiz</incoming>
+      <outgoing>Flow_0uqh3ru</outgoing>
+      <script>println "Script task msg: $message"</script>
+    </scriptTask>
+    <serviceTask id="Activity_1grlitq" name="Error" flowable:expression="${errorService.technicalError(message,errorFlag)}" jmix:taskType="springBean" jmix:beanName="errorService">
+      <extensionElements>
+        <jmix:springBean beanName="errorService" methodName="technicalError">
+          <jmix:methodParam name="code" type="java.lang.String" isVariable="true">message</jmix:methodParam>
+          <jmix:methodParam name="error" type="java.lang.Boolean" isVariable="true">errorFlag</jmix:methodParam>
+        </jmix:springBean>
+      </extensionElements>
+      <incoming>Flow_0uqh3ru</incoming>
+      <outgoing>Flow_1dh934q</outgoing>
+    </serviceTask>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="transaction-with-data-task-and-error">
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bxg4n7_di" bpmnElement="Event_0bxg4n7">
+        <omgdc:Bounds x="722" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1di53bq_di" bpmnElement="Activity_085qicp">
+        <omgdc:Bounds x="240" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03r64wd_di" bpmnElement="Activity_10wv48b">
+        <omgdc:Bounds x="400" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zzaoc6_di" bpmnElement="Activity_1grlitq">
+        <omgdc:Bounds x="560" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_17zdkdb_di" bpmnElement="Flow_17zdkdb">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="240" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1203tiz_di" bpmnElement="Flow_1203tiz">
+        <omgdi:waypoint x="340" y="168" />
+        <omgdi:waypoint x="400" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uqh3ru_di" bpmnElement="Flow_0uqh3ru">
+        <omgdi:waypoint x="500" y="168" />
+        <omgdi:waypoint x="560" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dh934q_di" bpmnElement="Flow_1dh934q">
+        <omgdi:waypoint x="660" y="168" />
+        <omgdi:waypoint x="722" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="call-activity-test" name="Call activity test" isExecutable="true" flowable:candidateStarterUsers="peter" jmix:candidateStarterUsersValue="peter">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <jmix:processVariables>
+          <jmix:processVariable name="city" type="string" />
+          <jmix:processVariable name="street" type="string" />
+          <jmix:processVariable name="building" type="string" />
+          <jmix:processVariable name="zipCode" type="string" />
+        </jmix:processVariables>
+        <jmix:formData type="input-dialog" openMode="DIALOG">
+          <jmix:formFields>
+            <jmix:formField id="city" caption="City" type="string" editable="true" required="true" />
+            <jmix:formField id="street" caption="Street" type="string" editable="true" required="true" />
+            <jmix:formField id="building" caption="Building" type="string" editable="true" required="true" />
+          </jmix:formFields>
+        </jmix:formData>
+      </extensionElements>
+      <outgoing>Flow_1uza6yb</outgoing>
+    </startEvent>
+    <callActivity id="Activity_0ug7nxh" name="Print address" calledElement="print-address" flowable:inheritVariables="true">
+      <incoming>Flow_1uza6yb</incoming>
+      <outgoing>Flow_1ifhyxy</outgoing>
+    </callActivity>
+    <sequenceFlow id="Flow_1uza6yb" sourceRef="startEvent1" targetRef="Activity_0ug7nxh" />
+    <endEvent id="Event_010ejx1">
+      <incoming>Flow_1ifhyxy</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_1ifhyxy" sourceRef="Activity_0ug7nxh" targetRef="Event_010ejx1" />
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="call-activity-test">
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17nf4mi_di" bpmnElement="Activity_0ug7nxh">
+        <omgdc:Bounds x="260" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_010ejx1_di" bpmnElement="Event_010ejx1">
+        <omgdc:Bounds x="442" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1uza6yb_di" bpmnElement="Flow_1uza6yb">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="223" y="168" />
+        <omgdi:waypoint x="223" y="170" />
+        <omgdi:waypoint x="260" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ifhyxy_di" bpmnElement="Flow_1ifhyxy">
+        <omgdi:waypoint x="360" y="168" />
+        <omgdi:waypoint x="442" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
