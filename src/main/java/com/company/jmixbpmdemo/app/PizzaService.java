@@ -4,6 +4,8 @@ import com.company.jmixbpmdemo.entity.PizzaItem;
 import io.jmix.core.UnconstrainedDataManager;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component(value = "pizzaService")
 public class PizzaService  {
 
@@ -19,6 +21,10 @@ public class PizzaService  {
 
         unconstrainedDataManager.save(pizzaItem);
         return oldPrice;
+    }
+
+    public List<PizzaItem> getPizzaItems() {
+        return unconstrainedDataManager.load(PizzaItem.class).all().list();
     }
 
 

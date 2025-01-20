@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="signal-start-two" name="Signal start two" isExecutable="true">
+    <endEvent id="Event_0cpr714">
+      <incoming>Flow_0s7y086</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_0s7y086" sourceRef="startEvent1" targetRef="Event_0cpr714" />
+    <startEvent id="startEvent1">
+      <outgoing>Flow_0s7y086</outgoing>
+      <signalEventDefinition id="SignalEventDefinition_0mnmq0n" signalRef="start_signal" />
+    </startEvent>
+  </process>
+  <signal id="start_signal" name="Start signal" flowable:scope="global" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="signal-start-two">
+      <bpmndi:BPMNShape id="Event_0cpr714_di" bpmnElement="Event_0cpr714">
+        <omgdc:Bounds x="242" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1jrg6n1_di" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0s7y086_di" bpmnElement="Flow_0s7y086">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="242" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="start-message-one" name="Start message one" isExecutable="true">
+    <endEvent id="Event_1aq93sq">
+      <incoming>Flow_05l5gfm</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_05l5gfm" sourceRef="startEvent1" targetRef="Event_1aq93sq" />
+    <startEvent id="startEvent1">
+      <outgoing>Flow_05l5gfm</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_1uhy4mo" messageRef="start_message" />
+    </startEvent>
+  </process>
+  <message id="start_message" name="Start" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="start-message-one">
+      <bpmndi:BPMNShape id="Event_1aq93sq_di" bpmnElement="Event_1aq93sq">
+        <omgdc:Bounds x="242" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0plmitb_di" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_05l5gfm_di" bpmnElement="Flow_05l5gfm">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="242" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

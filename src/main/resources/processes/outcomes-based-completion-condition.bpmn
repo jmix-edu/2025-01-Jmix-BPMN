@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:jmix="http://jmix.io/schema/bpm/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="outcomes-based-completion-condition" name="Outcomes based completion condition" isExecutable="true">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <jmix:processVariables>
+          <jmix:processVariable name="approvers" type="entity-list">
+            <jmix:processVariableProperty name="entityName" value="User" />
+          </jmix:processVariable>
+          <jmix:processVariable name="outcomes" type="string" />
+        </jmix:processVariables>
+      </extensionElements>
+      <outgoing>Flow_0a75jry</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_0a75jry" sourceRef="startEvent1" targetRef="Activity_04qowb2" />
+    <sequenceFlow id="Flow_0xtqpta" sourceRef="Activity_approve" targetRef="Activity_0l124z4" />
+    <sequenceFlow id="Flow_1nk3hvn" sourceRef="Activity_0l124z4" targetRef="Activity_05ezqu2" />
+    <userTask id="Activity_approve" name="Approve" flowable:assignee="${approvers_item.username}" jmix:assigneeSource="expression" jmix:assigneeValue="${approvers_item.username}">
+      <extensionElements>
+        <jmix:formData type="input-dialog" openMode="DIALOG">
+          <jmix:formOutcomes>
+            <jmix:formOutcome id="yes" caption="Yes" />
+            <jmix:formOutcome id="no" caption="No" />
+            <jmix:formOutcome id="maybe" caption="Maybe" />
+          </jmix:formOutcomes>
+        </jmix:formData>
+      </extensionElements>
+      <incoming>Flow_1tid0r3</incoming>
+      <outgoing>Flow_0xtqpta</outgoing>
+      <multiInstanceLoopCharacteristics flowable:collection="approvers" flowable:elementVariable="approvers_item" jmix:collectionSource="processVariable" jmix:collectionValue="approvers" />
+    </userTask>
+    <sequenceFlow id="Flow_1tid0r3" sourceRef="Activity_04qowb2" targetRef="Activity_approve" />
+    <serviceTask id="Activity_04qowb2" name="Load approvers" flowable:type="jmix-load-entities-jpql">
+      <extensionElements>
+        <flowable:field name="jpql">
+          <flowable:string>select u from User u</flowable:string>
+        </flowable:field>
+        <flowable:field name="resultVariable">
+          <flowable:string>approvers</flowable:string>
+        </flowable:field>
+        <flowable:field name="saveLoadResultAs">
+          <flowable:string>collection</flowable:string>
+        </flowable:field>
+      </extensionElements>
+      <incoming>Flow_0a75jry</incoming>
+      <outgoing>Flow_1tid0r3</outgoing>
+    </serviceTask>
+    <serviceTask id="Activity_0l124z4" name="Get outcomes" flowable:delegateExpression="${outcomeContainerReader}" jmix:taskType="delegateExpression">
+      <incoming>Flow_0xtqpta</incoming>
+      <outgoing>Flow_1nk3hvn</outgoing>
+    </serviceTask>
+    <userTask id="Activity_05ezqu2" name="See otcomes" flowable:assignee="${initiator.username}" jmix:assigneeSource="processVariable" jmix:assigneeValue="initiator">
+      <extensionElements>
+        <jmix:formData type="input-dialog" openMode="DIALOG">
+          <jmix:formFields>
+            <jmix:formField id="outcomes" caption="Outcomes" type="string" editable="true" required="false" />
+          </jmix:formFields>
+        </jmix:formData>
+      </extensionElements>
+      <incoming>Flow_1nk3hvn</incoming>
+      <outgoing>Flow_1gjxyon</outgoing>
+    </userTask>
+    <sequenceFlow id="Flow_1gjxyon" sourceRef="Activity_05ezqu2" targetRef="Gateway_06o7yaq">
+      <extensionElements>
+        <jmix:conditionDetails conditionSource="userTaskOutcome" />
+      </extensionElements>
+    </sequenceFlow>
+    <inclusiveGateway id="Gateway_06o7yaq">
+      <incoming>Flow_1gjxyon</incoming>
+      <outgoing>Flow_12cnk7e</outgoing>
+      <outgoing>Flow_1ur6end</outgoing>
+      <outgoing>Flow_0489qb7</outgoing>
+    </inclusiveGateway>
+    <endEvent id="Event_0h1u82k">
+      <incoming>Flow_12cnk7e</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_12cnk7e" name="Yes" sourceRef="Gateway_06o7yaq" targetRef="Event_0h1u82k">
+      <extensionElements>
+        <jmix:conditionDetails conditionSource="userTaskOutcome" conditionType="everyoneCompleted" userTaskId="Activity_approve" userTaskOutcome="yes" />
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression">${execution.getVariable('Activity_approve_result') != null &amp;&amp; bpm_UserTaskResults.containsOutcome(execution.getVariable('Activity_approve_result'), 'yes')}</conditionExpression>
+    </sequenceFlow>
+    <endEvent id="Event_0bh1t21">
+      <incoming>Flow_1ur6end</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_1ur6end" name="Maybe" sourceRef="Gateway_06o7yaq" targetRef="Event_0bh1t21">
+      <extensionElements>
+        <jmix:conditionDetails conditionSource="userTaskOutcome" conditionType="anyoneCompleted" userTaskId="Activity_approve" userTaskOutcome="maybe" />
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression">${execution.getVariable('Activity_approve_result') != null &amp;&amp; bpm_UserTaskResults.containsOutcome(execution.getVariable('Activity_approve_result'), 'maybe')}</conditionExpression>
+    </sequenceFlow>
+    <endEvent id="Event_0u7t7em">
+      <incoming>Flow_0489qb7</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_0489qb7" name="No" sourceRef="Gateway_06o7yaq" targetRef="Event_0u7t7em">
+      <extensionElements>
+        <jmix:conditionDetails conditionSource="userTaskOutcome" conditionType="everyoneCompleted" userTaskId="Activity_approve" userTaskOutcome="no" />
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression">${execution.getVariable('Activity_approve_result') != null &amp;&amp; bpm_UserTaskResults.containsOutcome(execution.getVariable('Activity_approve_result'), 'no')}</conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="outcomes-based-completion-condition">
+      <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+        <omgdc:Bounds x="12" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_150ioat_di" bpmnElement="Activity_approve">
+        <omgdc:Bounds x="240" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15x14nc_di" bpmnElement="Activity_04qowb2">
+        <omgdc:Bounds x="90" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0c4qkjx_di" bpmnElement="Activity_0l124z4">
+        <omgdc:Bounds x="400" y="128" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08zkwl1_di" bpmnElement="Activity_05ezqu2">
+        <omgdc:Bounds x="560" y="128" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1179h7z_di" bpmnElement="Gateway_06o7yaq">
+        <omgdc:Bounds x="725" y="143" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0h1u82k_di" bpmnElement="Event_0h1u82k">
+        <omgdc:Bounds x="832" y="52" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0u7t7em_di" bpmnElement="Event_0u7t7em">
+        <omgdc:Bounds x="832" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bh1t21_di" bpmnElement="Event_0bh1t21">
+        <omgdc:Bounds x="832" y="242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0a75jry_di" bpmnElement="Flow_0a75jry">
+        <omgdi:waypoint x="48" y="168" />
+        <omgdi:waypoint x="90" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xtqpta_di" bpmnElement="Flow_0xtqpta">
+        <omgdi:waypoint x="340" y="168" />
+        <omgdi:waypoint x="400" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nk3hvn_di" bpmnElement="Flow_1nk3hvn">
+        <omgdi:waypoint x="500" y="168" />
+        <omgdi:waypoint x="560" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tid0r3_di" bpmnElement="Flow_1tid0r3">
+        <omgdi:waypoint x="190" y="168" />
+        <omgdi:waypoint x="240" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gjxyon_di" bpmnElement="Flow_1gjxyon">
+        <omgdi:waypoint x="660" y="168" />
+        <omgdi:waypoint x="725" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12cnk7e_di" bpmnElement="Flow_12cnk7e">
+        <omgdi:waypoint x="750" y="143" />
+        <omgdi:waypoint x="750" y="70" />
+        <omgdi:waypoint x="832" y="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="780" y="43" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ur6end_di" bpmnElement="Flow_1ur6end">
+        <omgdi:waypoint x="750" y="193" />
+        <omgdi:waypoint x="750" y="260" />
+        <omgdi:waypoint x="832" y="260" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="748" y="224" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0489qb7_di" bpmnElement="Flow_0489qb7">
+        <omgdi:waypoint x="775" y="168" />
+        <omgdi:waypoint x="832" y="168" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="796" y="150" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

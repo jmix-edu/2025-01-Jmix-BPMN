@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flowable.org/processdef" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <process id="messages-signals-demo" name="Messages signals demo" isExecutable="true">
+    <startEvent id="startEvent1">
+      <outgoing>Flow_1ovqfuz</outgoing>
+      <signalEventDefinition id="SignalEventDefinition_01vxc3b" signalRef="start" />
+    </startEvent>
+    <startEvent id="Event_1ps8hmq">
+      <outgoing>Flow_1rek4tx</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_0sv3re9" messageRef="start_demo" />
+    </startEvent>
+    <sequenceFlow id="Flow_1rek4tx" sourceRef="Event_1ps8hmq" targetRef="Event_1trplpt" />
+    <sequenceFlow id="Flow_1ovqfuz" sourceRef="startEvent1" targetRef="Event_1trplpt" />
+    <intermediateCatchEvent id="Event_1trplpt">
+      <incoming>Flow_1rek4tx</incoming>
+      <incoming>Flow_1ovqfuz</incoming>
+      <outgoing>Flow_0sf15o1</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_0l6qcl2" messageRef="continue_demo" />
+    </intermediateCatchEvent>
+    <sequenceFlow id="Flow_0sf15o1" sourceRef="Event_1trplpt" targetRef="Event_14o7u6f" />
+    <intermediateCatchEvent id="Event_14o7u6f">
+      <incoming>Flow_0sf15o1</incoming>
+      <outgoing>Flow_0d6mmnj</outgoing>
+      <signalEventDefinition id="SignalEventDefinition_0enleta" signalRef="ready" />
+    </intermediateCatchEvent>
+    <sequenceFlow id="Flow_0d6mmnj" sourceRef="Event_14o7u6f" targetRef="Event_1lh2te8" />
+    <intermediateThrowEvent id="Event_1lh2te8">
+      <incoming>Flow_0d6mmnj</incoming>
+      <outgoing>Flow_1tmys3w</outgoing>
+      <signalEventDefinition id="SignalEventDefinition_0wa0rt4" signalRef="stop" />
+    </intermediateThrowEvent>
+    <sequenceFlow id="Flow_1tmys3w" sourceRef="Event_1lh2te8" targetRef="Event_0ct9waj" />
+    <endEvent id="Event_0gatow3">
+      <incoming>Flow_1cko138</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_1cko138" sourceRef="Event_0ct9waj" targetRef="Event_0gatow3" />
+    <intermediateCatchEvent id="Event_0ct9waj">
+      <incoming>Flow_1tmys3w</incoming>
+      <outgoing>Flow_1cko138</outgoing>
+      <signalEventDefinition id="SignalEventDefinition_1wjzk6d" signalRef="stop" />
+    </intermediateCatchEvent>
+  </process>
+  <signal id="ready" name="Ready" flowable:scope="global" />
+  <signal id="stop" name="Stop" flowable:scope="processInstance" />
+  <signal id="start" name="Start" flowable:scope="global" />
+  <message id="start_demo" name="Start demo" />
+  <message id="continue_demo" name="Continue demo" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_process" bpmnElement="messages-signals-demo">
+      <bpmndi:BPMNShape id="Event_0klx1qj_di" bpmnElement="startEvent1">
+        <omgdc:Bounds x="150" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03f3lzj_di" bpmnElement="Event_1ps8hmq">
+        <omgdc:Bounds x="150" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13xs0m7_di" bpmnElement="Event_1trplpt">
+        <omgdc:Bounds x="262" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ujhclq_di" bpmnElement="Event_14o7u6f">
+        <omgdc:Bounds x="397" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1uaojsr_di" bpmnElement="Event_1lh2te8">
+        <omgdc:Bounds x="502" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0gatow3_di" bpmnElement="Event_0gatow3">
+        <omgdc:Bounds x="722" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0k7sng9_di" bpmnElement="Event_0ct9waj">
+        <omgdc:Bounds x="612" y="150" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1rek4tx_di" bpmnElement="Flow_1rek4tx">
+        <omgdi:waypoint x="186" y="250" />
+        <omgdi:waypoint x="224" y="250" />
+        <omgdi:waypoint x="224" y="168" />
+        <omgdi:waypoint x="262" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ovqfuz_di" bpmnElement="Flow_1ovqfuz">
+        <omgdi:waypoint x="186" y="168" />
+        <omgdi:waypoint x="262" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sf15o1_di" bpmnElement="Flow_0sf15o1">
+        <omgdi:waypoint x="298" y="168" />
+        <omgdi:waypoint x="397" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d6mmnj_di" bpmnElement="Flow_0d6mmnj">
+        <omgdi:waypoint x="433" y="168" />
+        <omgdi:waypoint x="502" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tmys3w_di" bpmnElement="Flow_1tmys3w">
+        <omgdi:waypoint x="538" y="168" />
+        <omgdi:waypoint x="612" y="168" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cko138_di" bpmnElement="Flow_1cko138">
+        <omgdi:waypoint x="648" y="168" />
+        <omgdi:waypoint x="722" y="168" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
